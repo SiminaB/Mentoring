@@ -16,8 +16,7 @@ to answer. Why are you studying this problem? Why is it interesting? Move from t
 the more technical aspects, but do so in a logical manner, still focusing on the
 overall framework - Are you testing a specific hypothesis? Are you providing tools for exploratory
 data analysis?
-* Know your audience: If statistical, you may need to introduce biology terms like the different kinds of mutations
-- e.g. missense, nonsense. If biomedical, do not assume knowledge of statistics past t-test or programming knowledge.
+* Know your audience: If statistical, you may need to introduce biology terms like the different kinds of mutations - e.g. missense, nonsense. If biomedical, do not assume knowledge of statistics past t-test or programming knowledge.
 * You should go into technical details only after you introduce the big picture/framework. For example,
 details like "We use grouped LASSO with 10-fold crossvalidation" or "We used the following
 10 packages in R" do not need to be introduced up front. Methods and tools are very important but they should
