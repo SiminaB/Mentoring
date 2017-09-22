@@ -18,14 +18,14 @@ which is not necessarily the "expected value."
 The simplest case of regression is that of linear regression with a single explanatory variable. In other words, trying to
 draw a "best fit line" through a scatterplot. There are many ways to define the "best fit" and the one that is usually
 considered is based on the [quadratic loss function](https://en.wikipedia.org/wiki/Loss_function#Quadratic_loss_function) 
-(also known as squared error loss or L<sub>2<\sub> loss.)
+(also known as squared error loss or L<sub>2</sub> loss.)
 Basically, if one seeks to *minimize the sum of the squares of the differences* between the true outcome Y and the fitted values on the
 line hat{Y}, the solution is the "usual" [ordinary least squares (OLS)](https://en.wikipedia.org/wiki/Ordinary_least_squares).
 If there is no explanatory variable, the fitted line is flat and represents the average (mean) value of the explanatory
 values.
-In general, the OLS has some nice properties, for example if the error terms - defined as \epsilon = Y - \beta<sub>0<\sub> - 
-\beta<sub>1<\sub> X<sub>1<\sub>, where 
-\beta<sub>0<\sub> and \beta<sub>1<\sub> are the true intercept and slope of the line - are independent and identically distributed with finite
+In general, the OLS has some nice properties, for example if the error terms - defined as \epsilon = Y - \beta<sub>0</sub> - 
+\beta<sub>1</sub> X<sub>1</sub>, where 
+\beta<sub>0</sub> and \beta<sub>1</sub> are the true intercept and slope of the line - are independent and identically distributed with finite
 variance, the OLS fit is an unbiased estimator of the conditional mean E(Y|X) (i.e. its mean is equal to the conditional
 mean) and is in fact the [minimum-variance unbiased estimator](https://en.wikipedia.org/wiki/Minimum-variance_unbiased_estimator).
 Note that so far I haven't discussed the distribution of Y or even whether Y is continuous. However, in the case where the errors
@@ -39,7 +39,7 @@ There are however many other ways of defining the "best fit."
 However, perhaps one is interested in
 estimating an aspect of the distribution of Y|X other than its mean, such as its median.
 The median is naturally connected to the [absolute loss](https://en.wikipedia.org/wiki/Loss_function)
-(also known as as the L<sub>1<\sub> loss) in the same way that the mean is connected to the 
+(also known as as the L<sub>1</sub> loss) in the same way that the mean is connected to the 
 quadratic error loss. In this case, the criterion is to *minimize the sum of the absolute values of the differences*
 between the true outcome and the fitted values, also called the 
 [least absolute deviations or least absolute residuals](https://en.wikipedia.org/wiki/Least_absolute_deviations).
