@@ -155,20 +155,21 @@ For this latter case, this approach is equivalent to using a t-test with $n-p-1$
 
 ## From weighted regression to generalized linear models
 
-We mentioned before that one of the properties that is generally assumed for linear regression is that the error terms are independent and identically distributed. In case this does not hold, as [alterative to OLS](https://en.wikipedia.org/wiki/Generalized_linear_model) is to use either *weighted least squares* (WLS) or *generalized least squares* (GLS) approaches. This means that if the variance-covariance matrix of the error terms is $W$, then instead of minimizing 
-$\hat{\beta} = \arg\min||Y-X\beta||$ as before, one would instead want to minimize
-$\hat{\beta} = \arg\min(Y-X\beta)'W^{-1}(Y-X\beta)$, known as the *Mahalanobis length.*
-The solution to this problem is similar to the OLS, namely:
-$\hat{\beta}=(X'W^{-1}X)^{-1}X'W^{-1}Y$. If W has all off-diagonal terms equal to 0 (i.e. the errors are independent), this is the WLS estimate, otherwise it is the GLS estimate.
+We mentioned before that one of the properties that is generally assumed for linear regression is that the error terms are independent and identically distributed. In case this does not hold, an [alterative to OLS](https://en.wikipedia.org/wiki/Generalized_linear_model) is to use either *weighted least squares* (WLS) or *generalized least squares* (GLS) approaches. This means that if the variance-covariance matrix of the error terms is $W$, 
+then the MLE solution is:
+$\hat{\beta}=(X'W^{-1}X)^{-1}X'W^{-1}Y$. 
+This is equivalent to minimizing
+$\hat{\beta} = \arg\min(Y-X\beta)'W^{-1}(Y-X\beta)$, known as the *Mahalanobis length,*
+instead of
+$\hat{\beta} = \arg\min||Y-X\beta||$ as before.
+If W has all off-diagonal terms equal to 0 (i.e. the errors are independent), this is the WLS estimate, otherwise it is the GLS estimate.
 
 What happens if the outcome is not normally distributed? 
 Here we come to the [generalized linear model](https://en.wikipedia.org/wiki/Generalized_linear_model).
 In the case in which the outcome Y is from a class of distributions known as the 
 [exponential family](https://en.wikipedia.org/wiki/Exponential_family) - which include the normal, exponential, and Bernoulli distributions - 
-instead of trying to directly estimate the conditional mean $E(Y|X)$ as a linear function $X\beta$, it is generally more convenient to estimate a transformation of this mean, $g[E(Y|X)]$. This is because, for example, for a 0/1 outcome, using just the OLS will often result in fitted values outside of the [0,1] range, but using a *link function* g that transforms the (0,1) range corresponding to the probability of success in a Bernoulli distribution into the entire real line solves this problem. If the link function is the log-odds (logit), we find ourselves looking at logistic regression. What is interesting here is that the MLE solution for the parameters
-  
-
-
+instead of trying to directly estimate the conditional mean $E(Y|X)$ as a linear function $X\beta$, it is generally more convenient to estimate a transformation of this mean, $g[E(Y|X)]$. This is because, for example, for a 0/1 outcome, using just the OLS will often result in fitted values outside of the [0,1] range, but using a *link function* g that transforms the (0,1) range corresponding to the probability of success in a Bernoulli distribution into the entire real line solves this problem. If the link function is the log-odds (logit), we find ourselves looking at logistic regression. 
+In the general case, we cannot obtain a closed form MLE solution, but by applying a first-order Taylor approximation, we obtain an algorithm that peforms [iteratively reweighted least squares (IRLS)](https://web.as.uky.edu/statistics/users/pbreheny/760/S13/notes/2-19.pdf), where the matrix $W$ is related to the derivative of the inverse link function.
 
 ## Smoothing and regression
 
