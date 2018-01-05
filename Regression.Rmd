@@ -173,7 +173,11 @@ In the general case, we cannot obtain a closed form MLE solution, but by applyin
 
 ## Smoothing and regression
 
-Splines, loess, ridge regression, GAMs...
+So far we have discussed fitting linear models between an outcome and explanatory variables, but what happens if the relationship is clearly nonlinear? One option is to add more explanatory variables, including polynomial terms, and fit a linear function to those - for example, instead of having $X_1$ as an explanatory variable, can consider $X_1$ and $X_1^2$, so that we fit the model $E(Y|X_1) = \beta_0+\beta_1X_1+\beta_2X_1^2$ instead of $E(Y|X_1) = \beta_0+\beta_1X_1$. Thus, the function is still linear in the explanatory variables that are considered. More flexibility can be obtained by using regression models 
+that have piecewise polynomial terms, known as [splines](https://en.wikipedia.org/wiki/Spline_(mathematics)). 
+For the case of a single explanatory variable, another population approach is [local regression (loess)](https://en.wikipedia.org/wiki/Local_regression), which fits simple linear regression using a moving window, resulting in a smooth function.
+Many other advanced approaches are built on these concepts, including [smoothing splines](https://en.wikipedia.org/wiki/Smoothing_spline), which place knots at every observation but have a ["roughness penalty" to reduce overfitting](https://web.stanford.edu/class/stats202/content/lec17.pdf)
+and [generalized additive models (GAMs)](https://web.stanford.edu/class/stats202/content/lec17.pdf) which fit smooth functions for each separate explanatory variable.
 
 ## Regression and machine learning
 
