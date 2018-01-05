@@ -125,7 +125,7 @@ $\hat{\beta} = (X'X)^{-1}X'Y$.
 This means that the fitted values are:
 $\hat{Y}=X\hat{\beta} = X(X'X)^{-1}X'Y$.
 The matrix $X(X'X)^{-1}X'$ is in fact the [projection matrix onto the space spanned by the columns of X](https://en.wikipedia.org/wiki/Ordinary_least_squares), which is another way of conceptualizing that $\hat{Y}$ represents the closest vector to $Y$ out of all the vectors that are linear combinations of the explanatory variables. Once again, we define "closest" using the $L^2$ loss, or, in linear algebra terms, minimize the $L^2$ norm $||.||$:
-$\hat{\beta} \arg\min||Y-X\beta||$.
+$\hat{\beta} = \arg\min||Y-X\beta||$.
 It is also interesting to note that solving for $\beta$ in $X\beta = Y$ would in fact represent an [overdetermined system](https://en.wikipedia.org/wiki/Ordinary_least_squares) and as such cannot usually be solved exactly - we thus look for a solutions that gives a fit that is "close" to Y while at the same time being in the space spanned by the explanatory variables.
 
 ## T-tests, ANOVA, and all the rest: Hypothesis testing in linear models
@@ -153,12 +153,31 @@ The same idea holds in the case of ANOVA, where multiple group means are being c
 In general, we can test whether any linear combination of parameters in a multivariate model is equal to 0 by performing an [F-test](https://courses.washington.edu/b515/l6.pdf). This is a powerful approach, as it includes cases including the equality of two coefficients and of course, has a special case whether a single parameter is equal to 0.
 For this latter case, this approach is equivalent to using a t-test with $n-p-1$ degrees of freedom, where $p$ is the number of parameters, excluding the intercept. Thus, once again, the regression approach allows for a more general framework from which the special cases naturally fall out.
 
-## From weighted regression to general linear models
+## From weighted regression to generalized linear models
+
+We mentioned before that one of the properties that is generally assumed for linear regression is that the error terms are independent and identically distributed. In case this does not hold, as [alterative to OLS](https://en.wikipedia.org/wiki/Generalized_linear_model) is to use either *weighted least squares* (WLS) or *generalized least squares* (GLS) approaches. This means that if the variance-covariance matrix of the error terms is $W$, then instead of minimizing 
+$\hat{\beta} = \arg\min||Y-X\beta||$ as before, one would instead want to minimize
+$\hat{\beta} = \arg\min(Y-X\beta)'W^{-1}(Y-X\beta)$, known as the *Mahalanobis length.*
+The solution to this problem is similar to the OLS, namely:
+$\hat{\beta}=(X'W^{-1}X)^{-1}X'W^{-1}Y$. If W has all off-diagonal terms equal to 0 (i.e. the errors are independent), this is the WLS estimate, otherwise it is the GLS estimate.
+
+What happens if the outcome is not normally distributed? 
+Here we come to the [generalized linear model](https://en.wikipedia.org/wiki/Generalized_linear_model).
+In the case in which the outcome Y is from a class of distributions known as the 
+[exponential family](https://en.wikipedia.org/wiki/Exponential_family) - which include the normal, exponential, and Bernoulli distributions - 
+instead of trying to directly estimate the conditional mean $E(Y|X)$ as a linear function $X\beta$, it is generally more convenient to estimate a transformation of this mean, $g[E(Y|X)]$. This is because, for example, for a 0/1 outcome, using just the OLS will often result in fitted values outside of the [0,1] range, but using a *link function* g that transforms the (0,1) range corresponding to the probability of success in a Bernoulli distribution into the entire real line solves this problem. If the link function is the log-odds (logit), we find ourselves looking at logistic regression. What is interesting here is that the MLE solution for the parameters
+  
 
 
 
 ## Smoothing and regression
 
+Splines, loess, ridge regression, GAMs...
+
 ## Regression and machine learning
 
+Machine learning - takes the prediction error perspective, ALL these approaches could be seen as machine learning - many of these just build on these models
+
 ## Regression to the mean
+
+Go over initial example...
