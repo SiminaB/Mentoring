@@ -181,7 +181,8 @@ and [generalized additive models (GAMs)](https://web.stanford.edu/class/stats202
 
 ## Regression and machine learning
 
-Machine learning - takes the prediction error perspective, ALL these approaches could be seen as machine learning - many of these just build on these models
+*Machine learning*, also known as *statistical learning*, focuses on "learning from the data" in order to either predict the outcomes for new data points (supervised learning) or to find patterns in the data (unsupervised learning). For supervised learning tasks, any of the regression approaches described above can be considered, emphasizing that in machine learning, the main goal is having a low prediction error for new points, as opposed to performing statistical inference. If the number of predictors is very large, potentially larger than the number of samples, [regularization approaches](https://en.wikipedia.org/wiki/Regularization_(mathematics)) like ridge regression, LASSO, or elastic net can be used to reduce overfitting.
+Many more approaches exist, some which build on or are similar to regression. For example, [support vector machines (SVMs)](https://en.wikipedia.org/wiki/Support_vector_machine#Regression) for continuous outcomes are equivalent to regression models with a regularization term and the hinge loss instead of the quadratic loss function. Similarly, [neural networks](https://github.com/greenelab/deep-review/blob/master/content/02.intro.md) can be seen as extensions of linear or logistic regression.
 
 ## Regression to the mean
 
