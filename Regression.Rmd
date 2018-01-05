@@ -14,11 +14,7 @@ to collaborators, although I do admit that sometimes you have to start from spec
 
 ## Regression concepts connected to loss functions and conditional means and medians
 
-Regression basically refers to modelling the average effect of a variable (called the outcome or the dependent variable, and
-often denoted by Y) given some other variables (called the explanatory or independent variables, and often denoted by $X_1$, $X_2$, etc). In more statistical terms this can be defined as the
-["conditional expectation of the dependent variable given the independent variables,"](https://en.wikipedia.org/wiki/Regression_analysis)
-although, as I will explain later, one can see "average" as a more general measure of the "center" of the distribution,
-which is not necessarily the "expected value."
+The term "regression" is currently used in a large variety of ways. In general, if there a variable $Y$, called the outcome or dependent variable, and some other variables $X_1$, $X_2$ etc, called the explanatory or independent variables, then a regression of $Y$ on the $X$s can be ["any feature of the probability distribution" of $Y$ given (or "conditional on") the $X$"](http://www.jstor.org/stable/2727353). These features often relate to some measure of "average" or "center" of the distribution, such as the mean or the median.
 
 The simplest case of regression is that of linear regression with a single explanatory variable. In other words, trying to
 draw a "best fit line" through a scatterplot. There are many ways to define the "best fit" and the one that is usually
@@ -107,8 +103,8 @@ library(quantreg)
 ##intercept and slope estimated via quantile regression with median (see below)
 coef(rq(y ~ x1, tau=0.5))
 ```
-Similarly, if a [step function (0-1) loss](https://en.wikipedia.org/wiki/Loss_function#0-1_loss_function) is used instead,
-the result is f(x) = mode(Y|X=x) (conditional mode). *Add Manski paper here!!* Note that the mean, median, and mode
+Similarly, if a [step function (0-1) loss](http://www.jstor.org/stable/2727353) is used instead,
+the result is f(x) = mode(Y|X=x) (conditional mode). Note that the mean, median, and mode
 are the most common ways of describing the "center" of a continuous distribution.
  
 It may also be of interest to consider another quantile besides the median, which is sometimes the case
@@ -184,7 +180,3 @@ and [generalized additive models (GAMs)](https://web.stanford.edu/class/stats202
 *Machine learning*, also known as *statistical learning*, focuses on "learning from the data" in order to either predict the outcomes for new data points (supervised learning) or to find patterns in the data (unsupervised learning). "Predicting" in this case means obtaining the values $\hat{Y}$ for new points which are not in the dataset on which the model was fitted (the "training data"), using the model parameters estimated from that dataset.
 For supervised learning tasks, any of the regression approaches described above can be considered, emphasizing that in machine learning, the main goal is having a low prediction error for new points, as opposed to performing statistical inference. If the number of predictors is very large, potentially larger than the number of samples, [regularization approaches](https://en.wikipedia.org/wiki/Regularization_(mathematics)) like ridge regression, LASSO, or elastic net can be used to reduce overfitting.
 Many more approaches exist, some which build on or are similar to regression. For example, [support vector machines (SVMs)](https://en.wikipedia.org/wiki/Support_vector_machine#Regression) for continuous outcomes are equivalent to regression models with a regularization term and the hinge loss instead of the quadratic loss function. Similarly, [neural networks](https://github.com/greenelab/deep-review/blob/master/content/02.intro.md) can be seen as extensions of linear or logistic regression. It is also increasingly common in machine learning to use [ensemble methods](https://en.wikipedia.org/wiki/Ensemble_learning) that combine several approaches and perform a type of averaging or "voting" to obtain the final predicted values.
-
-## Regression to the mean
-
-Go over initial example...
