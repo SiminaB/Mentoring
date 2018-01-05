@@ -1,0 +1,164 @@
+---
+title: "Everything in statistical modeling can be seen as a regression"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+This is of course a bit of an exaggeration! It also depends on the way things are emphasized in, for example, statistical
+graduate programs. I know that my own training program was highly focused on seeing much of statistics as either a
+special case or a generalization of some kind of linear regression model. I kind of love this view and try to emphasize it whenever I can
+to collaborators, although I do admit that sometimes you have to start from special cases in order to build up the whole.
+
+## Regression concepts connected to loss functions and conditional means and medians
+
+Regression basically refers to modelling the average effect of a variable (called the outcome or the dependent variable, and
+often denoted by Y) given some other variables (called the explanatory or independent variables, and often denoted by $X_1$, $X_2$, etc). In more statistical terms this can be defined as the
+["conditional expectation of the dependent variable given the independent variables,"](https://en.wikipedia.org/wiki/Regression_analysis)
+although, as I will explain later, one can see "average" as a more general measure of the "center" of the distribution,
+which is not necessarily the "expected value."
+
+The simplest case of regression is that of linear regression with a single explanatory variable. In other words, trying to
+draw a "best fit line" through a scatterplot. There are many ways to define the "best fit" and the one that is usually
+considered is based on the [quadratic loss function](https://en.wikipedia.org/wiki/Loss_function#Quadratic_loss_function) 
+(also known as squared error loss or L<sub>2</sub> loss.)
+Basically, if one seeks to *minimize the sum of the squares of the errors*, i.e. the differences between the true outcome Y and the fitted values on the
+line $\hat{Y}$, the solution is the "usual" [ordinary least squares (OLS)](https://en.wikipedia.org/wiki/Ordinary_least_squares).
+Take this example where there is a single explanatory variable $X_1$ and the outcome variable $Y$  simply adds some noise. The regression OLS fit is in blue, as are the segments between fitted values and the true values of Y. Two other lines are shown in dashed orange.
+```{r}
+set.seed(38184)
+n <- 30
+##generate explanatory variable
+x1 <- rnorm(n)
+##generate outcome variable by adding some noise 
+y <- x1 + rnorm(n,0,0.5)
+plot(y ~ x1)
+##get regression line fit
+reg_line <- lm(y~x1) 
+##add regression line
+abline(reg_line,col="blue",lwd=2)
+##get fitted values
+fitted_y <- fitted(reg_line)
+##add segments going from true to fitted values
+segments(x0=x1, x1=x1, y0=y, y1=fitted_y, col="blue",lwd=1)
+##add two more lines
+int_slope_1 <- c(0.2,0.8)
+int_slope_2 <- c(-0.1,1.2)
+abline(a=int_slope_1[1], b=int_slope_1[2], col="orange",lty=2,lwd=2)
+abline(a=int_slope_2[1], b=int_slope_2[2], col="orange",lty=2,lwd=2)
+```
+
+The sum of the squared errors for the OLS fit is `r round(sum((y-fitted_y)^2),2)`, while for the other two lines
+it is `r round(sum((y-int_slope_1[1]-int_slope_1[2]*x1)^2),2)` and 
+`r round(sum((y-int_slope_2[1]-int_slope_2[2]*x1)^2),2)`.
+
+If there is no explanatory variable, the fitted line is flat and represents the average (mean) value of the outcome
+values: 
+```{r}
+plot(y ~ x1)
+##get regression line fit with no explanatory variables
+reg_line_no <- lm(y~1) 
+##check this is the same as the mean
+##reg_line_no
+##mean(y)
+##add line
+abline(reg_line_no,col="orange",lty=2,lwd=2)
+##get fitted values
+fitted_y_no <- fitted(reg_line_no)
+##add segments going from true to fitted values
+segments(x0=x1, x1=x1, y0=y, y1=fitted_y_no, col="orange",lty=2,lwd=1)
+```
+
+For the example above, this is clearly a poor fit. In fact, the sum of the squared errors in this case is `r round(sum((y-fitted_y_no)^2),2)`!
+
+In general, the OLS has some nice properties, for example if the error terms - defined as $\epsilon = Y - \beta_0 - 
+\beta_1 X_1$, where 
+$\beta_0$ and $\beta_1$ are the true intercept and slope of the line - are independent and identically distributed with finite
+variance, the OLS fit is an unbiased estimator of the conditional mean E(Y|X) (i.e. its mean is equal to the conditional
+mean) and is in fact the [minimum-variance unbiased estimator](https://en.wikipedia.org/wiki/Minimum-variance_unbiased_estimator).
+Note that so far I haven't discussed the distribution of Y or even whether Y is continuous. However, in the case where the errors
+(and therefore Y conditional on X) are normally distributed, the OLS is also the maximum likelihood estimator (MLE) of the conditional mean
+E(Y|X). 
+
+One reason why the quadratic loss function is considered very often is because the mathematics works out very nicely (can solve for the maximum using the usual calculus-based second
+derivative test). This also generalizes nicely if there are more explanatory variables - we can just include them all in a matrix
+X and essentially proceed in the same way with the help of some multivariate calculus. 
+There are however many other ways of defining the "best fit."
+However, perhaps one is interested in
+estimating an aspect of the distribution of Y|X other than its mean, such as its median.
+The median is naturally connected to the [absolute loss](https://en.wikipedia.org/wiki/Loss_function)
+(also known as as the L<sub>1</sub> loss) in the same way that the mean is connected to the 
+quadratic error loss. In this case, the criterion is to *minimize the sum of the absolute values of the errors*,
+also called the 
+[least absolute deviations (LAD) or least absolute residuals](https://en.wikipedia.org/wiki/Least_absolute_deviations).
+In the absence of an explanatory variable, the flat fitted line represents the median of the explanatory values.
+If we look more generally for a function f where the values f(X) are most similar to Y, with the similarity being 
+defined using the quadratic loss, then the "best fit" (which minimizes
+[the expected prediction error (EPE - see _Elements of statistical learning_, section 2.4)](https://web.stanford.edu/~hastie/Papers/ESLII.pdf) is the function
+f(x) = E(Y|X=x) (conditional mean); by contrast, if it is defined using the absolute loss, it is
+f(x) = median(Y|X=x) (conditional median). In general, medians are more robust than means, given their lack of dependence
+on outliers, but the math gets harder much faster due to discontinuous derivatives which complicate optimization procedures. For the example above, the results are almost identical whether minimizing the sum of squares or the sum of absolute values of the errors:
+```{r, echo=TRUE}
+##intercept and slope estimated via OLS
+coef(lm(y ~ x1))
+library(quantreg)
+##intercept and slope estimated via quantile regression with median (see below)
+coef(rq(y ~ x1, tau=0.5))
+```
+Similarly, if a [step function (0-1) loss](https://en.wikipedia.org/wiki/Loss_function#0-1_loss_function) is used instead,
+the result is f(x) = mode(Y|X=x) (conditional mode). *Add Manski paper here!!* Note that the mean, median, and mode
+are the most common ways of describing the "center" of a continuous distribution.
+ 
+It may also be of interest to consider another quantile besides the median, which is sometimes the case
+when considering a variable with an asymmetric distribution, such as income distributions. 
+[Quantile regression](https://en.wikipedia.org/wiki/Quantile_regression) considers different loss functions 
+for this purpose; the loss function used for the median is however equivalent to the LAD. If the errors have an asymmetric Laplace distribution, the estimator obtained here for a specific quantile is 
+its [MLE](http://www.american.edu/cas/economics/info-metrics/pdf/upload/working-paper-bera.pdf).
+For the rest of this document, we will generally use "regression" in the "usual way," considering the square error loss.
+
+## More about the OLS fit: Linear algebra and geometric interpretation
+
+Above we considered the special case of fitting lines in 2 dimensions, where there was a single explanatory variable and two parameters were estimated: the slope and the intercept of the "best fitting line." In general, many variables can be considered. It is common to consider all these variables in a single matrix $X$, which has each variable as a column and each sample as a row, with the first column typically consisting of 1s. The goal is then to estimate a vector of "parameters" $\beta$, so that the outcome $Y$ is "as close as possible" to $X\beta$ (thus, the first element of $\beta$ is the intercept). Under certain linear algebra assumptions, there is a nice [closed form for the OLS in the multivariate case](https://en.wikipedia.org/wiki/Proofs_involving_ordinary_least_squares):
+$\hat{\beta} = (X'X)^{-1}X'Y$.
+This means that the fitted values are:
+$\hat{Y}=X\hat{\beta} = X(X'X)^{-1}X'Y$.
+The matrix $X(X'X)^{-1}X'$ is in fact the [projection matrix onto the space spanned by the columns of X](https://en.wikipedia.org/wiki/Ordinary_least_squares), which is another way of conceptualizing that $\hat{Y}$ represents the closest vector to $Y$ out of all the vectors that are linear combinations of the explanatory variables. Once again, we define "closest" using the $L^2$ loss, or, in linear algebra terms, minimize the $L^2$ norm $||.||$:
+$\hat{\beta} \arg\min||Y-X\beta||$.
+It is also interesting to note that solving for $\beta$ in $X\beta = Y$ would in fact represent an [overdetermined system](https://en.wikipedia.org/wiki/Ordinary_least_squares) and as such cannot usually be solved exactly - we thus look for a solutions that gives a fit that is "close" to Y while at the same time being in the space spanned by the explanatory variables.
+
+## T-tests, ANOVA, and all the rest: Hypothesis testing in linear models
+
+Perhaps the first thing most people think of when they think statistics is the t-test. [Student's two-sample t-test](https://en.wikipedia.org/wiki/Student%27s_t-test#Independent_two-sample_t-test) is used to compare the means of two distributions, with the null hypothesis stating that they are equal, for either normally distributed random variables or for continuous random variables with a large enough sample size. One of the powerful things about linear regression is that a two-sample t-test which assumes equal variances is in fact the same as a linear model where the explanatory variable is a 0/1 variable which defines group membership:
+```{r, echo=TRUE}
+set.seed(380148)
+n <- 10
+##define the two random variables
+##y1 is from a normal distribution with mean=0, sd=1
+y1 <- rnorm(n,0,1)
+##y2 is from a normal distribution with mean=0.5, sd=1
+y2 <- rnorm(n,0.5,1)
+##run a t-test!
+t.test(y1,y2,var.equal = TRUE)
+##create a single vector of outcomes and a vector indicating group membership
+y <- c(y1,y2)
+x1 <- c(rep(0,length(y1)),rep(1,length(y2)))
+summary(lm(y~x1))
+```
+As we can see, the p-value is the same and the estimated slope is in fact equal to the differences between means. Since one of the assumptions behind the properties of the OLS is that the error terms are identically distributed, this means that the case of unequal variances cannot be directly placed in this framework. However, if the variances are unequal, this means that perhaps other explanatory variables should be considered, so these could then be included in a regression model.
+
+The same idea holds in the case of ANOVA, where multiple group means are being compared. One of the benefits of having a regression mindset is that it very easy to interpret the results in terms of conditional means and it also allows for a unified framework which can include both continuous and discrete explanatory variables and interactions between them, without having to resort to special terminology like two-way ANOVA, ANCOVA, etc.
+
+In general, we can test whether any linear combination of parameters in a multivariate model is equal to 0 by performing an [F-test](https://courses.washington.edu/b515/l6.pdf). This is a powerful approach, as it includes cases including the equality of two coefficients and of course, has a special case whether a single parameter is equal to 0.
+For this latter case, this approach is equivalent to using a t-test with $n-p-1$ degrees of freedom, where $p$ is the number of parameters, excluding the intercept. Thus, once again, the regression approach allows for a more general framework from which the special cases naturally fall out.
+
+## From weighted regression to general linear models
+
+
+
+## Smoothing and regression
+
+## Regression and machine learning
+
+## Regression to the mean
