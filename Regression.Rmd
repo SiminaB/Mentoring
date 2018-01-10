@@ -69,12 +69,12 @@ segments(x0=x1, x1=x1, y0=y, y1=fitted_y_no, col="orange",lty=2,lwd=1)
 
 For the example above, this is clearly a poor fit. In fact, the sum of the squared errors in this case is `r round(sum((y-fitted_y_no)^2),2)`!
 
-In general, the OLS has some nice properties, for example if the error terms - defined as $\epsilon = Y - \beta_0 - 
+In general, the OLS has some nice properties, for example if the noise terms - defined as $\epsilon = Y - \beta_0 - 
 \beta_1 X_1$, where 
 $\beta_0$ and $\beta_1$ are the true intercept and slope of the line - are independent and identically distributed with finite
 variance, the OLS fit is an unbiased estimator of the conditional mean E(Y|X) (i.e. its mean is equal to the conditional
 mean) and is in fact the [minimum-variance unbiased estimator](https://en.wikipedia.org/wiki/Minimum-variance_unbiased_estimator).
-Note that so far I haven't discussed the distribution of Y or even whether Y is continuous. However, in the case where the errors
+Note that so far I haven't discussed the distribution of Y or even whether Y is continuous. However, in the case where the noise terms
 (and therefore Y conditional on X) are normally distributed, the OLS is also the maximum likelihood estimator (MLE) of the conditional mean
 E(Y|X). 
 
@@ -110,7 +110,7 @@ are the most common ways of describing the "center" of a continuous distribution
 It may also be of interest to consider another quantile besides the median, which is sometimes the case
 when considering a variable with an asymmetric distribution, such as income distributions. 
 [Quantile regression](https://en.wikipedia.org/wiki/Quantile_regression) considers different loss functions 
-for this purpose; the loss function used for the median is however equivalent to the LAD. If the errors have an asymmetric Laplace distribution, the estimator obtained here for a specific quantile is 
+for this purpose; the loss function used for the median is however equivalent to the LAD. If the noise terms have an asymmetric Laplace distribution, the estimator obtained here for a specific quantile is 
 its [MLE](http://www.american.edu/cas/economics/info-metrics/pdf/upload/working-paper-bera.pdf).
 For the rest of this document, we will generally use "regression" in the "usual way," considering the square error loss.
 
@@ -142,7 +142,7 @@ y <- c(y1,y2)
 x1 <- c(rep(0,length(y1)),rep(1,length(y2)))
 summary(lm(y~x1))
 ```
-As we can see, the p-value is the same and the estimated slope is in fact equal to the differences between means. Since one of the assumptions behind the properties of the OLS is that the error terms are identically distributed, this means that the case of unequal variances cannot be directly placed in this framework. However, if the variances are unequal, this means that perhaps other explanatory variables should be considered, so these could then be included in a regression model.
+As we can see, the p-value is the same and the estimated slope is in fact equal to the differences between means. Since one of the assumptions behind the properties of the OLS is that the noise terms are identically distributed, this means that the case of unequal variances cannot be directly placed in this framework. However, if the variances are unequal, this means that perhaps other explanatory variables should be considered, so these could then be included in a regression model.
 
 The same idea holds in the case of ANOVA, where multiple group means are being compared. One of the benefits of having a regression mindset is that it very easy to interpret the results in terms of conditional means and it also allows for a unified framework which can include both continuous and discrete explanatory variables and interactions between them, without having to resort to special terminology like two-way ANOVA, ANCOVA, etc.
 
@@ -151,14 +151,14 @@ For this latter case, this approach is equivalent to using a t-test with $n-p-1$
 
 ## From weighted regression to generalized linear models
 
-We mentioned before that one of the properties that is generally assumed for linear regression is that the error terms are independent and identically distributed. In case this does not hold, an [alterative to OLS](https://en.wikipedia.org/wiki/Generalized_linear_model) is to use either *weighted least squares* (WLS) or *generalized least squares* (GLS) approaches. This means that if the variance-covariance matrix of the error terms is $W$, 
+We mentioned before that one of the properties that is generally assumed for linear regression is that the noise terms are independent and identically distributed. In case this does not hold, an [alterative to OLS](https://en.wikipedia.org/wiki/Generalized_linear_model) is to use either *weighted least squares* (WLS) or *generalized least squares* (GLS) approaches. This means that if the variance-covariance matrix of the noise terms is $W$, 
 then the MLE solution is:
 $\hat{\beta}=(X'W^{-1}X)^{-1}X'W^{-1}Y$. 
 This is equivalent to minimizing
 $\hat{\beta} = \arg\min(Y-X\beta)'W^{-1}(Y-X\beta)$, known as the *Mahalanobis length,*
 instead of
 $\hat{\beta} = \arg\min||Y-X\beta||$ as before.
-If W has all off-diagonal terms equal to 0 (i.e. the errors are independent), this is the WLS estimate, otherwise it is the GLS estimate.
+If W has all off-diagonal terms equal to 0 (i.e. the noise terms are independent), this is the WLS estimate, otherwise it is the GLS estimate.
 
 What happens if the outcome is not normally distributed? 
 Here we come to the [generalized linear model](https://en.wikipedia.org/wiki/Generalized_linear_model).
