@@ -3,8 +3,11 @@ There are many resources for this. I am personally indebted to my Rafa Irizarry,
 Note that I tend to spend maybe 90% of total analysis time doing this kind of EDA and don't usually start doing much modeling until I do at least an initial first pass of EDA and discuss 
 results with the rest of the team and/or investigators who generated the data/provided the samples. See also [Hadley Wickham's diagram](http://r4ds.had.co.nz/diagrams/data-science.png) representing the data analytic process.
 
-### General tip
-* If using R, always make sure you include NAs (for example, in the table function, this not the default - have to specify 'useNA = "ifany"')
+### General tips
+* Science tip: Make sure you understand the study design. Sometimes things aren't totally clear until after the EDA though. Are there
+biological replicates, technical replicates, or both? What does "biological replicate" even mean? (Same person, different part of the tumor, but same date?
+Same person, different time? Same person, one measurement before treatment and one measurement after treatment?)
+* Technical tip: If using R, always make sure you include NAs (for example, in the table function, this not the default - have to specify 'useNA = "ifany"')
 
 ### Specific steps
 * Check the number of samples, tabulate by all possible variables (such as case/control, disease type, sex, study site etc) - make sure there are no
@@ -14,9 +17,9 @@ NAs there, make sure variables are standardized (eg not have M = Male = male, br
 may aso have certain measurements above/below limit of detection, like in metabolomics or proteomics). Make sure that ranges all make sense (again, 0s
 can indicate value below limit of detection - need to figure out what to do with this before applying log transforms; if study is on adolescents, make sure that no one
 has age 1 or 30; make sure there are no weird codings for "missing data," like 999 or -9 etc).  Do this using both tables of quantiles and histograms.
-* If there are clinical outcomes, make sure you understand them and that you calculate survival (so you have the appropriate dates and understand the censoring mechanism etc.)
+* If there are clinical outcomes, make sure you understand them. For example, if needed, make sure that you can calculate survival (so you have the appropriate dates and understand the censoring mechanism etc.)
 * If anything has units, make sure you know what they are (eg is age in years or months?) 
-* If there are specific batches or run orders that are common for the data considered, try to get those variables (for example, run dates for microarrays, run order
+* Make sure you have data on batches or run order; if not, try to get those variables (for example, run dates for microarrays, run order
 for metabolomics data)
 * Make boxplots, PCA plots (use scale=TRUE if using prcomp, which is not the default) of log-transformed omics features, ordering and/or color-coding by the various
 variables, especially batch/run order. This is probably the most important step in looking for possible artifacts/confounders. Note that even if there is no clear
