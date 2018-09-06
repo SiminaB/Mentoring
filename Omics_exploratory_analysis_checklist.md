@@ -18,7 +18,12 @@ NAs there, make sure variables are standardized (eg not have M = Male = male, br
 may aso have certain measurements above/below limit of detection, like in metabolomics or proteomics). Make sure that ranges all make sense (again, 0s
 can indicate value below limit of detection - need to figure out what to do with this before applying log transforms; if study is on adolescents, make sure that no one
 has age 1 or 30; make sure there are no weird codings for "missing data," like 999 or -9 etc).  Do this using both tables of quantiles and histograms.
-* If there are clinical outcomes, make sure you understand them. For example, if needed, make sure that you can calculate survival (so you have the appropriate dates and understand the censoring mechanism etc.)
+* If you have NAs or 0s for the omics dataset, get an idea of how prevalent these are. Are there some samples that are mostly NA/0? Are there some metabolites that are NA/0
+in a large fraction of samples? I've used the cutoff of 5% before i.e. only use metabolites that are > 0 in 95% of the samples and for those samples, replace the 0s with the
+smallest value above 0. That seems to work OK. If some metabolites are 0 in, say, 50% of the samples, you probably don't want to use the (transformed) metabolite intensities
+as outcomes in a linear regression and need to decide on a different model (this may be OK if the metabolite is caffeine or cotinine, which is present in smokers, for example - 
+not all metabolites will be present in everyone, but if you see this for creatine or glucose, there may be an issue)
+* If there are clinical outcomes, make sure you understand them or how to calculate them. For example, if needed, make sure that you can calculate survival (so you have the appropriate dates and understand the censoring mechanism etc.)
 * If anything has units, make sure you know what they are (eg is age in years or months?) 
 * Make sure you have data on batches or run order; if not, try to get those variables (for example, run dates for microarrays, run order
 for metabolomics data)
