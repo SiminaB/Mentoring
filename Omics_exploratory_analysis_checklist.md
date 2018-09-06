@@ -6,7 +6,8 @@ results with the rest of the team and/or investigators who generated the data/pr
 ### General tips
 * Science tip: Make sure you understand the study design. Sometimes things aren't totally clear until after the EDA though. Are there
 biological replicates, technical replicates, or both? What does "biological replicate" even mean? (Same person, different part of the tumor, but same date?
-Same person, different time? Same person, one measurement before treatment and one measurement after treatment?)
+Same person, different time? Same person, one measurement before treatment and one measurement after treatment?) Make sure you have the variables
+that will allow you to take the study design into consideration (eg may need a variable for "time point," a variable for "individual" etc)
 * Technical tip: If using R, always make sure you include NAs (for example, in the table function, this not the default - have to specify 'useNA = "ifany"')
 
 ### Specific steps
